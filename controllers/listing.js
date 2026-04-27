@@ -28,6 +28,7 @@ module.exports.showListing=async (req,res)=>{
 // create
 
 module.exports.createListing = async (req, res, next) => {
+    // console.log(req.file);
   try {
     if (!req.user) {
       req.flash("error", "Login required");
