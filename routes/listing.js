@@ -18,7 +18,7 @@ const upload=multer({storage});
 // index route
 router.route("/")
 .get(wrapAsync(listingController.index))
-.post(isLoggedIn, upload.single("listing[image]"),validateListing,
+.post(isLoggedIn, upload.single("image"),validateListing,
     wrapAsync(listingController.createListing)
 );
 // .post(upload.single("listing[image]"),(req,res)=>{
@@ -35,7 +35,7 @@ router.get("/:id/edit",isLoggedIn, isOwner,wrapAsync(listingController.renderEdi
 // show route
 router.route("/:id")
 .get(wrapAsync(listingController.showListing))
-.put(isLoggedIn,isOwner,upload.single("listing[image]"), validateListing,wrapAsync(listingController.updateListing))
+.put(isLoggedIn,isOwner,upload.single("image"), validateListing,wrapAsync(listingController.updateListing))
 .delete(isLoggedIn,isOwner, wrapAsync(listingController.destroyListing)
 );
 
