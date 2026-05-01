@@ -9,9 +9,11 @@ const listingSchema=new Schema({
     },
     description:String,
     image: {
-        url:String,
-       filename:String,
-       default:"https://unsplash.com/photos/a-large-white-house-sitting-on-top-of-a-lush-green-field-o2QVnNtRE_g",
+        url:{
+             type:String,
+             default:"https://unsplash.com/photos/a-large-white-house-sitting-on-top-of-a-lush-green-field-o2QVnNtRE_g",
+        },
+        filename:String,
        // set:(v)=> v===""?"link":v
         
     },
@@ -19,7 +21,7 @@ const listingSchema=new Schema({
     country:String,
     location:String,
     reviews :[{
-        type:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,""
         ref:"Review",
        // default:""
     }],
