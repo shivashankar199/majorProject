@@ -11,7 +11,7 @@ const listingSchema=new Schema({
     image: {
         url:String,
        filename:String,
-       // default:"link",
+       default:"https://unsplash.com/photos/a-large-white-house-sitting-on-top-of-a-lush-green-field-o2QVnNtRE_g",
        // set:(v)=> v===""?"link":v
         
     },
