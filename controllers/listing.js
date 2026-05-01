@@ -27,35 +27,79 @@ module.exports.showListing=async (req,res)=>{
     
 // create
 
+// module.exports.createListing = async (req, res, next) => {
+//      console.log(req.file);
+//   try {
+//     if (!req.user) {
+//       req.flash("error", "Login required");
+//       return res.redirect("/login");
+//     }
+
+//     let response = await geocodingClient.forwardGeocode({
+//       query: req.body.listing.location,
+//       limit: 1
+//     }).send();
+
+//     if (!response.body.features.length) {
+//       req.flash("error", "Invalid location");
+//       return res.redirect("/listings/new");
+//     }
+
+//     let newListing = new Listing(req.body.listing);
+//     newListing.owner = req.user._id;
+
+//     if (req.file) {
+//       newListing.image = {
+//         url: req.file.path,
+//         filename: req.file.filename
+//       };
+//     }
+
+//     newListing.geometry = response.body.features[0].geometry;
+
+//     await newListing.save();
+
+//     req.flash("success", "New listing created!");
+//     res.redirect("/listings");
+
+//   } catch (err) {
+//     console.log(err);
+//     next(err);
+//   }
+// };
+
 module.exports.createListing = async (req, res, next) => {
-     console.log(req.file);
   try {
     if (!req.user) {
       req.flash("error", "Login required");
       return res.redirect("/login");
     }
 
-    let response = await geocodingClient.forwardGeocode({
+    if (!req.body.listing) {
+      req.flash("error", "Invalid listing data");
+      return res.redirect("/listings/new");
+    }
+
+    const response = await geocodingClient.forwardGeocode({
       query: req.body.listing.location,
       limit: 1
     }).send();
 
-    if (!response.body.features.length) {
+    const feature = response.body.features[0];
+
+    if (!feature || !feature.geometry) {
       req.flash("error", "Invalid location");
       return res.redirect("/listings/new");
     }
 
-    let newListing = new Listing(req.body.listing);
+    const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
 
-    if (req.file) {
-      newListing.image = {
-        url: req.file.path,
-        filename: req.file.filename
-      };
-    }
+    newListing.image = req.file
+      ? { url: req.file.path, filename: req.file.filename }
+      : { url: "/default.jpg", filename: "default" };
 
-    newListing.geometry = response.body.features[0].geometry;
+    newListing.geometry = feature.geometry;
 
     await newListing.save();
 
@@ -63,10 +107,20 @@ module.exports.createListing = async (req, res, next) => {
     res.redirect("/listings");
 
   } catch (err) {
-    console.log(err);
-    next(err);
+    console.error(err);
+    req.flash("error", "Something went wrong");
+    res.redirect("/listings/new");
   }
 };
+
+
+
+
+
+
+
+
+
 
 // edit
 
